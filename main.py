@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from hotel.db.engine import init_db
-from hotel.routers import rooms
+from hotel.routers import bookings, customers, rooms
 
 app = FastAPI()
 
@@ -18,3 +18,5 @@ def get_root():
 
 
 app.include_router(rooms.router)
+app.include_router(customers.router)
+app.include_router(bookings.router)

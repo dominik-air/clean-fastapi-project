@@ -1,7 +1,8 @@
 import unittest
 from datetime import date
+from hotel.operations.bookings import InvalidDateError
 from hotel.operations.interface import DataObject
-from hotel.operations.rooms import check_room_availability
+from hotel.operations.rooms import check_room_availability, get_available_rooms
 from test.stub import DataInterfaceStub
 
 
@@ -19,6 +20,15 @@ class BookingInterface(DataInterfaceStub):
         ]
 
 
+class RoomInterface(DataInterfaceStub):
+    def get_all(self) -> list[DataObject]:
+        return [
+            {"id": 1, "number": "101", "size": 10, "price": 150_00},
+            {"id": 2, "number": "102", "size": 10, "price": 150_00},
+            {"id": 3, "number": "103", "size": 10, "price": 150_00},
+        ]
+
+
 class TestRooms(unittest.TestCase):
     def test_available_room(self):
         result = check_room_availability(
@@ -33,3 +43,23 @@ class TestRooms(unittest.TestCase):
         )
 
         self.assertFalse(result)
+
+    def test_rooms_available_in_date_range(self):
+        result = get_available_rooms(
+            start_date=date(2022, 6, 24),
+            end_date=date(2022, 6, 28),
+            room_interface=RoomInterface(),
+            booking_interface=BookingInterface(),
+        )
+
+        self.assertEqual(len(result), 2)
+
+    def test_invalid_date_range(self):
+        self.assertRaises(
+            InvalidDateError,
+            get_available_rooms,
+            date(2022, 6, 28),
+            date(2022, 6, 24),
+            RoomInterface(),
+            BookingInterface(),
+        )

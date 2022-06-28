@@ -1,4 +1,5 @@
-from datetime import date
+from datetime import date, timedelta
+from hotel.operations.bookings import InvalidDateError
 from hotel.operations.interface import DataInterface, DataObject
 
 
@@ -25,3 +26,30 @@ def check_room_availability(
         ):
             return False
     return True
+
+
+def get_available_rooms(
+    start_date: date,
+    end_date: date,
+    room_interface: DataInterface,
+    booking_interface: DataInterface,
+) -> list[DataObject]:
+
+    if start_date > end_date:
+        raise InvalidDateError()
+
+    rooms = room_interface.get_all()
+
+    # get days that we need to check
+    delta = end_date - start_date
+    days = [start_date + timedelta(days=i) for i in range(delta.days + 1)]
+
+    available_rooms = []
+
+    for room in rooms:
+        if all(
+            check_room_availability(room["id"], day, booking_interface) for day in days
+        ):
+            available_rooms.append(room)
+
+    return available_rooms

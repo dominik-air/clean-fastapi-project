@@ -26,13 +26,14 @@ def get_customer(customer_id: int, customer_interface: DataInterface) -> DataObj
 def create_customer(
     data: CustomerCreateData, customer_interface: DataInterface
 ) -> DataObject:
-    return customer_interface.create(data)
+    return customer_interface.create(data.dict())
 
 
 def update_customer(
     customer_id: int, data: CustomerUpdateData, customer_interface: DataInterface
 ) -> DataObject:
-    return customer_interface.update(customer_id, data)
+    customer_data = {k: v for k, v in data.dict().items() if v is not None}
+    return customer_interface.update(customer_id, customer_data)
 
 
 def delete_customer(customer_id: int, customer_interface: DataInterface) -> DataObject:

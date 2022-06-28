@@ -22,7 +22,7 @@ def api_get_all_bookings():
 @router.get("/booking/{booking_id}")
 def api_get_booking(booking_id: int):
     booking_interface = DBInterface(DBBooking)
-    return get_booking(booking_id, booking_interface=DBInterface(DBBooking))
+    return get_booking(booking_id, booking_interface)
 
 
 @router.post("/booking")

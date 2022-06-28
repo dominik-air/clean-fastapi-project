@@ -21,7 +21,7 @@ class DBInterface:
 
     def create(self, data: DataObject) -> DataObject:
         session = DBSession()
-        result = self.db_class(**data.dict())
+        result = self.db_class(**data)
         session.add(result)
         session.commit()
         return to_dict(result)
@@ -29,7 +29,7 @@ class DBInterface:
     def update(self, id: int, data: DataObject) -> DataObject:
         session = DBSession()
         result = session.query(self.db_class).get(id)
-        for key, value in data.dict(exclude_none=True).items():
+        for key, value in data.items():
             setattr(result, key, value)
         session.commit()
         return to_dict(result)

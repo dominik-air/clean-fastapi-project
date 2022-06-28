@@ -1,3 +1,4 @@
+import random
 from fastapi import APIRouter
 from hotel.db.db_interface import DBInterface
 from hotel.db.models import DBBooking, DBRoom
@@ -9,6 +10,8 @@ from hotel.operations.bookings import (
     get_all_bookings,
     get_booking,
 )
+from hotel.operations.errors import UnavailableRoomError
+from hotel.operations.rooms import get_available_rooms
 
 router = APIRouter()
 
@@ -26,10 +29,19 @@ def api_get_booking(booking_id: int):
 
 
 @router.post("/booking")
-def api_create_booking(customer: BookingCreateData):
+def api_create_booking(data: BookingCreateData):
     booking_interface = DBInterface(DBBooking)
     room_interface = DBInterface(DBRoom)
-    return create_booking(customer, room_interface, booking_interface)
+    try:
+        return create_booking(data, room_interface, booking_interface)
+    except UnavailableRoomError:
+        # in case the chosen room is unavailable in the given range choose a random available one
+        available_rooms = get_available_rooms(
+            data.from_date, data.to_date, room_interface, booking_interface
+        )
+        room = random.choice(available_rooms)
+        data.room_id = room["id"]
+        return create_booking(data, room_interface, booking_interface)
 
 
 @router.delete("/booking/{booking_id}")

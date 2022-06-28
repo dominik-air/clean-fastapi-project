@@ -1,11 +1,9 @@
-from datetime import date
+from datetime import date, timedelta
 from pydantic import BaseModel
+from hotel.operations.errors import InvalidDateError, UnavailableRoomError
 
 from hotel.operations.interface import DataInterface, DataObject
-
-
-class InvalidDateError(Exception):
-    pass
+from hotel.operations.rooms import check_room_availability
 
 
 class BookingCreateData(BaseModel):
@@ -35,6 +33,16 @@ def create_booking(
 
     if days <= 0:
         raise InvalidDateError("Invalid dates.")
+
+    # check if the room is available
+    delta = data.to_date - data.from_date
+    dates = [data.from_date + timedelta(days=i) for i in range(delta.days + 1)]
+    if not all(
+        check_room_availability(data.room_id, date, booking_interface) for date in dates
+    ):
+        raise UnavailableRoomError(
+            f"Room with id: {data.room_id} is not available from {data.from_date} to {data.to_date}."
+        )
 
     booking_dict = data.dict()
     booking_dict["price"] = room["price"] * days

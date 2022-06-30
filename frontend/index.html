@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hotel</title>
+    <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
+    <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+
+    <py-env>
+        - pandas
+        - jinja2
+    </py-env>
+
+</head>
+
+<body>
+    <py-title>Hotel Frontend</py-title>
+
+    <link rel="stylesheet" type="text/css" href="mystyle.css">
+
+    <div class="container">
+        <py-script>
+            import pandas as pd
+            import json
+            from pyodide.http import pyfetch
+            import asyncio
+
+            response = await pyfetch(url="http://hotel_api:9000/customers", method="GET")
+            data = await response.json()
+            pd.DataFrame(data).style
+        </py-script>
+    </div>
+
+    <div class="container">
+        <py-script>
+            import pandas as pd
+            import json
+            from pyodide.http import pyfetch
+            import asyncio
+
+            response = await pyfetch(url="http://hotel_api:9000/rooms", method="GET")
+            data = await response.json()
+            pd.DataFrame(data).style
+        </py-script>
+    </div>
+
+    <div class="container">
+        <py-script>
+            import pandas as pd
+            import json
+            from pyodide.http import pyfetch
+            import asyncio
+
+            response = await pyfetch(url="http://hotel_api:9000/bookings", method="GET")
+            data = await response.json()
+            pd.DataFrame(data).style
+        </py-script>
+    </div>
+
+
+</body>
+
+</html>

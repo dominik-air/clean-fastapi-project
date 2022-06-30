@@ -27,7 +27,7 @@
             from pyodide.http import pyfetch
             import asyncio
 
-            response = await pyfetch(url="http://hotel_api:9000/customers", method="GET")
+            response = await pyfetch(url="http://0.0.0.0:9000/customers", method="GET")
             data = await response.json()
             pd.DataFrame(data).style
         </py-script>
@@ -40,7 +40,7 @@
             from pyodide.http import pyfetch
             import asyncio
 
-            response = await pyfetch(url="http://hotel_api:9000/rooms", method="GET")
+            response = await pyfetch(url="http://0.0.0.0:9000/rooms", method="GET")
             data = await response.json()
             pd.DataFrame(data).style
         </py-script>
@@ -53,7 +53,7 @@
             from pyodide.http import pyfetch
             import asyncio
 
-            response = await pyfetch(url="http://hotel_api:9000/bookings", method="GET")
+            response = await pyfetch(url="http://0.0.0.0:9000/bookings", method="GET")
             data = await response.json()
             pd.DataFrame(data).style
         </py-script>

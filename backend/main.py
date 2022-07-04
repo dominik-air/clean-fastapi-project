@@ -5,7 +5,7 @@ from hotel.routers import bookings, customers, rooms
 
 app = FastAPI()
 
-DB_FILE = "sqlite:///hotel.db"
+DB_FILE = "sqlite:///db/hotel.db"
 
 origins = ["*"]
 
@@ -16,6 +16,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 @app.on_event("startup")
 def startup_event():

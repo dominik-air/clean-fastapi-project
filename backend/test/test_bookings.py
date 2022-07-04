@@ -17,7 +17,6 @@ class RoomInterface(DataInterfaceStub):
 
 
 class BookingInterface(DataInterfaceStub):
-
     def get_all(self) -> list[DataObject]:
         return [
             {
@@ -61,7 +60,7 @@ class TestBooking(unittest.TestCase):
             RoomInterface(),
             BookingInterface(),
         )
-    
+
     def test_unavailable_room_booking(self):
         booking_data = BookingCreateData(
             room_id=1, customer_id=2, from_date="2022-06-28", to_date="2022-07-01"
